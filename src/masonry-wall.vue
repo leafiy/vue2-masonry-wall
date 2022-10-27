@@ -21,11 +21,7 @@
 <!--SOFTWARE.-->
 
 <template>
-  <div
-    ref="wall"
-    class="masonry-wall"
-    :style="{ display: 'flex', gap: `${gap}px` }"
-  >
+  <div ref="wall" class="masonry-wall" :style="{ display: 'flex', gap: `${gapX}px ${gapY}px` }">
     <div
       v-for="(column, columnIndex) in columns"
       :key="columnIndex"
@@ -37,13 +33,11 @@
         'flex-direction': 'column',
         'flex-grow': 1,
         height: ['-webkit-max-content', '-moz-max-content', 'max-content'],
-        gap: `${gap}px`,
+        gap: `${gapX}px ${gapY}px`,
       }"
     >
       <div v-for="itemIndex in column" :key="itemIndex" class="masonry-item">
-        <slot :item="items[itemIndex]" :index="itemIndex">
-          {{ items[itemIndex] }}
-        </slot>
+        <slot :item="items[itemIndex]" :index="itemIndex">{{ items[itemIndex] }}</slot>
       </div>
     </div>
   </div>
@@ -73,7 +67,11 @@ export default /*#__PURE__*/ Vue.extend({
       type: Number,
       default: 400,
     },
-    gap: {
+    gapX: {
+      type: Number,
+      default: 0,
+    },
+    gapY: {
       type: Number,
       default: 0,
     },
@@ -109,7 +107,7 @@ export default /*#__PURE__*/ Vue.extend({
     columnWidth() {
       this.redraw()
     },
-    gap() {
+    gapX() {
       this.redraw()
     },
     rtl() {
@@ -137,8 +135,8 @@ export default /*#__PURE__*/ Vue.extend({
     },
     columnCount(): number {
       const count = Math.floor(
-        (this.wall.getBoundingClientRect().width + this.gap) /
-          (this.columnWidth + this.gap)
+        (this.wall.getBoundingClientRect().width + this.gapX) /
+          (this.columnWidth + this.gapX)
       )
       return count > 0 ? count : 1
     },
